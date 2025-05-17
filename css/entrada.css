@@ -1,0 +1,144 @@
+body{
+    background-color: rgb(0, 0, 0);
+}
+.container {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  
+    align-items: center;      
+    text-align: center;       
+    height: 100%;
+    
+}
+.card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  
+    align-items: center;      
+    text-align: center;       
+    height: 100%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    font-family: Calibri;
+    font-size: large;
+}
+.card-img-top{
+    border-radius: 15px;
+}
+.btn-dark {
+    background-color: #000 !important;
+    color: white !important;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-dark:hover {
+    background-color: crimson !important;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+@keyframes flotar {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-15px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+
+.circle {
+    position: absolute;
+    background-color: crimson;
+    border-radius: 50%;
+    z-index: 0;
+    left: calc(100% - 30px);
+}
+.circle1 {
+    width: 300px;
+    height: 300px;
+    top: 10%;
+    left: 8%;
+    animation: flotar 8s ease-in-out infinite;
+    
+}
+.circle2 {
+    width: 150px;
+    height: 150px;
+    top: 10%;
+    left: 35%;
+    animation: flotar 4.5s ease-in-out infinite;
+}
+
+.circle3 {
+    width: 250px;
+    height: 250px;
+    top: 10%;
+    left: 60%;
+    animation: flotar 6s ease-in-out infinite;
+}
+
+.circle4 {
+    width: 100px;
+    height: 100px;
+    top: 40%;
+    left: 85%;
+    animation: flotar 5.2s ease-in-out infinite;
+}
+
+.circle5 {
+    width: 180px;
+    height: 180px;
+    top: 75%;
+    left:80%;
+    animation: flotar 4.8s ease-in-out infinite;
+}
+
+.circle6 {
+    width: 120px;
+    height: 120px;
+    top: 70%;
+    left:60%;
+    animation: flotar 6.3s ease-in-out infinite;
+}
+.circle7 {
+    width: 150px;
+    height: 150px;
+    bottom: 10%;
+    left: 10%;
+    animation: flotar 5s ease-in-out infinite;
+}
+
+.circle8 {
+    width: 120px;
+    height: 120px;
+    bottom: 30%;
+    left: 35%;
+    animation: flotar 4.7s ease-in-out infinite;
+}
+
+.circle9 {
+    width: 80px;
+    height: 80px;
+    bottom: 40%;
+    left: 60%;
+    animation: flotar 6s ease-in-out infinite;
+}
+
+.logo{
+    width: 220px;
+}
+
+.login-box{
+    border-radius: 20px;
+    background-color: white;
+    width: 280px;
+    height: auto;
+}
+
+.rd{
+    border: 2px solid red;
+}

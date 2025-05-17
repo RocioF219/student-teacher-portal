@@ -1,0 +1,50 @@
+body{
+    background-color: black;
+}
+.containerPadre{
+    position: relative;
+    background-color: rgb(255, 255, 255);
+    height: 150px;
+    width: 100%;
+    border-radius: 5px;
+    /*border: 6px solid red;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card-container{
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+    margin-top: 50px;
+    flex-wrap: wrap;
+}
+.button{
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    margin-right: 10px;
+}
+.logo{
+    height: 150px;
+    width: auto;
+    border-radius: 4px;
+}
+.btn-dark {
+    background-color: #000 !important;
+    color: white !important;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-dark:hover {
+    background-color: crimson !important;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+@media (max-width: 576px) {
+    .navbar-text {
+      font-size: 0.9rem;
+    }
+  }

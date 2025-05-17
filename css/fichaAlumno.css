@@ -1,0 +1,92 @@
+body{
+    background-color: black;
+}
+.containerPadre{
+    position: relative;
+    background-color: rgb(255, 255, 255);
+    height: 150px;
+    width: 100%;
+    border-radius: 5px;
+   /* border: 6px solid red;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.button{
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    margin-right: 10px;
+}
+.logo{
+    height: 150px;
+    width: auto;
+    border-radius: 4px;
+}
+.contenedorTarjeta{
+    margin-top: 30px;
+    margin-left: 30px;
+}
+.contenedorCalendario{
+    width: 400px;
+    display: inline;
+}
+#calendar {
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+    border-collapse: collapse;
+    text-align: center;
+    font-family: monospace;
+    border: 6px solid crimson;
+
+  }
+  #calendar caption {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+    background-color: aliceblue;
+    border: 6px solid crimson;
+  }
+  #calendar td, #calendar th {
+    border: 1px solid #999;
+    padding: 10px;
+  }
+  #calendar .hoy {
+    background-color: crimson;
+    color: white;
+    font-weight: bold;
+  }
+  #calendar caption div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #calendar caption a {
+    cursor: pointer;
+    padding: 5px 10px;
+    background: #ccc;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+  #calendar .clase-dia {
+    background-color: #28a745; /* verde */
+    color: white;
+  }
+  
+  #calendar .actuacion {
+    background-color: #007bff; /* azul */
+    color: white;
+    font-weight: bold;
+  }
+  
+  #calendar .hoy {
+    background-color: crimson;
+    color: white;
+    font-weight: bold;
+  }
+  .card {
+    margin-top: 20px;
+    margin-right: 20px;
+  }

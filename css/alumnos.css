@@ -1,0 +1,63 @@
+body{
+    background-color: black;
+}
+.containerPadre{
+    position: relative;
+    background-color: rgb(255, 255, 255);
+    height: 150px;
+    width: 100%;
+    border-radius: 5px;
+    /*border: 6px solid red;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.containerHijo{
+    width: 200px;
+    border: 6px solid color red;
+
+}
+.card-container{
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+    margin-top: 50px;
+    flex-wrap: wrap;
+}
+.button{
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    margin-right: 10px;
+}
+.logo{
+    height: 150px;
+    width: auto;
+    border-radius: 4px;
+}
+.lista{
+    margin-top: 25px;
+}
+
+.container-cards{
+    display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+
+.buttonEdit{
+    background-color: black;
+    color: antiquewhite;
+    align-items: center;
+}
+.buttonDelete{
+    background-color: black;
+    color: antiquewhite;
+    align-items: center;
+    justify-content: center;
+}
