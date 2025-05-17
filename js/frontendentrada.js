@@ -32,7 +32,7 @@ $("#submitForm").click(function(){
                     title: res.message,
                 });
             } else{
-                window.location.href = "../html/fichaAlumno.php";
+                window.location.href = res.url;
             }
         },
         error: function(){

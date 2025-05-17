@@ -1,6 +1,9 @@
 <?php
 
-$server = "192.168.1.140";
+$directorio = $_SERVER["DOCUMENT_ROOT"];
+include("$directorio/func/verErrores.php");
+
+$server = "127.0.0.1";
 $user = "root";
 $contrasena = "password";
 $db = "escueladanza";

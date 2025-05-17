@@ -1,11 +1,15 @@
 <?php
 
-$directorio = __dir__;
+$directorio = $_SERVER["DOCUMENT_ROOT"];
+// include("$directorio/func/logOut.php");
+
+session_start();
+session_destroy();
 
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8" />

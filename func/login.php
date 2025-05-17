@@ -1,6 +1,8 @@
 <?php
 
-include("../includes/database.php");
+$directorio = $_SERVER["DOCUMENT_ROOT"];
+include("$directorio/func/verErrores.php");
+include("$directorio/includes/database.php");
 
 session_start();
 
@@ -20,7 +22,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         exit;
     }
 
-    $query = "SELECT id, email, contrasena, tipo FROM usuarios WHERE email = ? AND contrasena = ?";
+    $query = "SELECT id_alumno, email, contrasena, id_rol FROM alumno WHERE email = ? AND contrasena = ?";
     $stmt = $link -> prepare($query);
     $stmt -> bind_param("ss", $email, $contrasena);
     $stmt -> execute();
@@ -28,10 +30,21 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 
     if(mysqli_num_rows($resultado) > 0){
         $datos = $resultado->fetch_assoc();
-        $_SESSION["user_id"] = $datos["id"];
-        $_SESSION["rol"] = $datos["tipo"];
-        echo json_encode(["id" => "200"]);
-        exit;
+        $_SESSION["alumno_id"] = $datos["id_alumno"];
+        $_SESSION["rol"] = $datos["id_rol"];
+        if($_SESSION["rol"] === 1){
+            echo json_encode([
+                "id" => "200",
+                "url" => "/ficha"
+            ]);
+            exit;
+        } elseif($_SESSION["rol"] === 2){
+            echo json_encode([
+                "id" => "200",
+                "url" => "/cms"
+            ]);
+            exit;
+        }
     } else{
         echo json_encode(["message" => "Email o contraseña incorrectos", "id" => "500"]);
         exit;
