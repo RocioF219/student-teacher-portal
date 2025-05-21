@@ -3,6 +3,10 @@ $directorio = $_SERVER["DOCUMENT_ROOT"];
 include("$directorio/func/verErrores.php");
 include_once("$directorio/func/fichaAlumnoback.php");
 include_once("$directorio/func/logged.php");
+
+$clases = include_once("$directorio/func/obtener_clases.php");
+$profesores = include_once("$directorio/func/obtener_profesores.php");
+
 ?>
 
 <!DOCTYPE html>
@@ -74,28 +78,79 @@ include_once("$directorio/func/logged.php");
                     </div>
                 </div>
                 <div class="col">
-                    <div class="contenedorCalendario">
-                        <div class="calendario">
-                            <table id="calendar" style="background-color: aliceblue;">
-                                <caption></caption>
+                    <div class="w-100 p-2">
+                        <div class="div-clases text-white">
+                            <h2>Horario de clases</h2>
+                            <table class="table table-striped table-bordered">
                                 <thead>
-                                    <tr>
-                                        <th>Lun</th>
-                                        <th>Mar</th>
-                                        <th>Mié</th>
-                                        <th>Jue</th>
-                                        <th>Vie</th>
-                                        <th>Sáb</th>
-                                        <th>Dom</th>
+                                    <tr class="table-danger">
+                                        <th>Clase</th>
+                                        <th>Fecha</th>
+                                        <th>Hora</th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    <?php foreach ($clases as $clase) {
+                                        $fecha = (new DateTime($clase["fecha"]))->format("d/m/Y");
+                                    ?>
+                                        <tr>
+                                            <td><?= $clase["nombre_clase"] ?></td>
+                                            <td><?= $fecha ?></td>
+                                            <td><?= $clase["hora_entrada"] . " - " . $clase["hora_salida"] ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-                <div class="col text-white">
-                    Seccion de mensajes
+                <div class="col text-black m-3 div-mensajes">
+                    <div class="d-flex flex-column">
+                        <div class="d-flex flex-row menu-mensajes">
+                            <button class="btn" id="btn-mensajes">
+                                <div class="d-flex justify-content-center align-items-center text-white ms-3 me-3 menu-opcion">
+                                    Mensajes
+                                </div>
+                            </button>
+                            <button class="btn" id="btn-historial">
+                                <div class="d-flex justify-content-center align-items-center text-white menu-opcion">
+                                    Historial
+                                </div>
+                            </button>
+                            <button class="btn" id="btn-crear">
+                                <div class="d-flex justify-content-center align-items-center text-white menu-opcion">
+                                    Nuevo mensaje
+                                </div>
+                            </button>
+                        </div>
+                        <div class="vista-mensajes">
+                            <section id="seccion1" class="bg-secondary text-white text-center">
+                                <h1>Mensajes</h1>
+                            </section>
+                            <section id="seccion2" class="d-none">
+                                <h1 class="bg-warning text-dark text-center">Historial de mensajes</h1>
+                            </section>
+                            <section id="seccion3" class="d-none">
+                                <h1 class="bg-danger text-dark text-center">Crear nuevo mensaje</h1>
+                                <div class="w-100 p-3">
+                                    <form id="form-mensaje">
+                                        <label class="form-label" for="profesor">Profesor:</label>
+                                        <select class="form-control" name="inp-profesor" id="profesor">
+                                            <option value="">Elije un profesor</option>
+                                            <?php foreach($profesores as $profesor){ ?>
+                                                <option value="<?= $profesor["id_alumno"] ?>"><?= $profesor["nombre"] . " " . $profesor["apellidos"] ?></option>
+                                            <?php } ?>
+                                        </select>
+                                        <br>
+                                        <label for="mensaje">Mensaje:</label>
+                                        <textarea class="form-control" name="inp-mensaje" id="mensaje" rows="5" maxlength="1000"></textarea>
+                                        <br>
+                                        <input class="btn btn-success" type="button" id="enviar" value="Enviar">
+                                    </form>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
                 </div>
                 <div class="col">
                     <div class="card">
@@ -200,8 +255,6 @@ include_once("$directorio/func/logged.php");
                         }
                     })
 
-
-
                 });
 
                 $("#cancelar-btn").on("click", function() {
@@ -212,6 +265,67 @@ include_once("$directorio/func/logged.php");
                     $("#guardar-btn").addClass("d-none");
                     $("#cancelar-btn").addClass("d-none");
                 });
+
+                $("#btn-mensajes").on("click", function(){
+                    $("#seccion1").removeClass("d-none");
+                    $("#seccion2").addClass("d-none");
+                    $("#seccion3").addClass("d-none");
+                })
+
+                $("#btn-historial").on("click", function(){
+                    $("#seccion2").removeClass("d-none");
+                    $("#seccion1").addClass("d-none");
+                    $("#seccion3").addClass("d-none");
+                })
+
+                $("#btn-crear").on("click", function(){
+                    $("#seccion3").removeClass("d-none");
+                    $("#seccion1").addClass("d-none");
+                    $("#seccion2").addClass("d-none");
+                })
+
+                $("#enviar").on("click", function(){
+                    let $profe = $("#profesor").val();
+                    let $mensaje = $("#mensaje").val();
+
+                    if($profe <= 0){
+                        Swal.fire({
+                            icon: "error",
+                            title: "Debes rellenar el campo profesor.",
+                        });
+                        return;
+                    }
+
+                    if($mensaje.length <= 0){
+                        Swal.fire({
+                            icon: "error",
+                            title: "Debes rellenar el campo mensaje.",
+                        });
+                        return;
+                    }
+
+                    $.ajax({
+                        url: url + "/func/enviar_mensaje.php",
+                        method: "POST",
+                        data: $("#form-mensaje").serialize(),
+                        success: function(res){
+                            if(res.code == "200"){
+                                Swal.fire({
+                                    icon: "success",
+                                    title: res.message,
+                                });
+                                $("#form-mensaje")[0].reset();
+                            } else{
+                                Swal.fire({
+                                    icon: "error",
+                                    title: res.message,
+                                });
+                            }
+                        }
+                    })
+                })
+
+
             })
         </script>
 </body>

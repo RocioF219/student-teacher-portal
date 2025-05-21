@@ -14,7 +14,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
     $tlf = $_POST["tlf"];
     $id = $_SESSION["alumno_id"];
 
-    $query = "SELECT email, telefono FROM alumno WHERE id_alumno = ?";
+    $query = "SELECT email, telefono FROM usuario WHERE id_alumno = ?";
     $stmt = $link->prepare($query);
     $stmt->bind_param("i", $id);
     $stmt->execute();
@@ -26,7 +26,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         exit;
     }
 
-    $query = "UPDATE alumno SET email = ?, telefono = ? WHERE id_alumno = ?";
+    $query = "UPDATE usuario SET email = ?, telefono = ? WHERE id_alumno = ?";
     $stmt = $link->prepare($query);
     $stmt->bind_param("sii", $email, $tlf, $id);
     $stmt->execute();
