@@ -48,8 +48,8 @@ $profesores = include_once("$directorio/func/obtener_profesores.php");
         </div>
     </header>
     <div class="contenedorTarjeta">
-        <div class="row">
-            <div class="col d-flex justify-content-center">
+        <div class="d-flex justify-content-center">
+            <div class="d-flex flex-wrap justify-content-center">
                 <div class="card" style="width: 18rem">
                     <img src="../img/logo/logo_alicia.jpg" class="card-img-top" alt="Imagen del alumno" />
                     <div class="card-body">
@@ -77,7 +77,7 @@ $profesores = include_once("$directorio/func/obtener_profesores.php");
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <div>
                     <div class="w-100 p-2">
                         <div class="div-clases text-white">
                             <h2>Horario de clases</h2>
@@ -104,7 +104,7 @@ $profesores = include_once("$directorio/func/obtener_profesores.php");
                         </div>
                     </div>
                 </div>
-                <div class="col text-black m-3 div-mensajes">
+                <div class="text-black m-3 div-mensajes">
                     <div class="d-flex flex-column">
                         <div class="d-flex flex-row menu-mensajes">
                             <button class="btn" id="btn-mensajes">
@@ -152,7 +152,7 @@ $profesores = include_once("$directorio/func/obtener_profesores.php");
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <div>
                     <div class="card">
                         <div class="card-header bg-primary text-white">
                             Registrar Pago
