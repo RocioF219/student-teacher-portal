@@ -61,3 +61,7 @@ body{
     align-items: center;
     justify-content: center;
 }
+.card-img-top{
+    height: 60%;
+    object-fit:contain;
+}

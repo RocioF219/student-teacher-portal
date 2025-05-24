@@ -1,9 +1,6 @@
 const randomX = Math.floor(Math.random() * window.innerWidth);
 const randomY = Math.floor(Math.random() * window.innerHeight);
 
-console.log(randomX + " " + randomY)
-
-
 $("#submitForm").click(function(){
     if(!revisarEmail($("#emailInput").val())){
         Swal.fire({

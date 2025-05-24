@@ -4,3 +4,4 @@ RewriteCond %{REQUEST_URI} !^/login$
 RewriteRule ^$ index.php [L]
 RewriteRule ^ficha$ html/fichaAlumno.php [L]
 RewriteRule ^cms$ html/cms.php [L]
+RewriteRule ^alumnos$ html/alumnos.php [L]

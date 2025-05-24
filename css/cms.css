@@ -47,3 +47,6 @@ body{
     height: 60%;
     object-fit:contain;
 }
+.img-card{
+    width: 240px;
+}
