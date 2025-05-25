@@ -5,6 +5,7 @@ session_start();
 include("$directorio/func/verErrores.php");
 include("$directorio/func/dominio.php");
 include_once("$directorio/func/logged.php");
+include_once("$directorio/func/logged_profesor.php");
 
 $alumnos = include_once("$directorio/func/obtener_alumnos.php");
 $grupos = include_once("$directorio/func/obtener_grupos.php");
@@ -14,18 +15,12 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+    <?php include_once("$directorio/includes/header.php"); ?>
     <link rel="stylesheet" href="../css/alumnos.css" />
-    <title>Escuela de Danza Alicia Iranzo</title>
 </head>
 
 <body>
-    <header class="containerPadre py-3">
+    <header class="container-padre py-3">
         <div class="container">
             <div class="row align-items-center">
 
@@ -63,24 +58,23 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
             <div class="card m-3 p-2" style="width: 18rem;">
                 <img src="<?= $protocolo . $dominio ?>/img/person.svg" class="card-img-top" alt="alumno">
                 <div class="card-body">
-                    <form id="alumno-form">
+                    <form class="alumno-form">
                         <label for="nombre">Nombre:</label>
-                        <input class="form-control mb-1 nombre" id="nombre" name="inp-nombre" value="<?= $alumno["nombre"] ?>" disabled>
+                        <input class="form-control mb-1 nombre" name="inp-nombre" value="<?= $alumno["nombre"] ?>" disabled>
                         <label for="apellidos">Apellidos:</label>
-                        <input class="form-control mb-1 apellidos" id="apellidos" name="inp-apellidos" value="<?= $alumno["apellidos"] ?>" disabled>
+                        <input class="form-control mb-1 apellidos" name="inp-apellidos" value="<?= $alumno["apellidos"] ?>" disabled>
                         <label for="email">Email:</label>
-                        <input class="form-control mb-1 email" id="email" name="inp-email" value="<?= $alumno["email"] ?>" disabled>
+                        <input class="form-control mb-1 email" name="inp-email" value="<?= $alumno["email"] ?>" disabled>
                         <label for="telefono">Telefono:</label>
-                        <input class="form-control mb-1 telefono" id="telefono" name="inp-telefono" value="<?= $alumno["telefono"] ?>" disabled>
+                        <input class="form-control mb-1 telefono" name="inp-telefono" value="<?= $alumno["telefono"] ?>" disabled>
                         <label for="grupo">Grupo:</label>
-
-                        <select class="form-control mb-1 grupo" id="grupo" name="inp-grupo" disabled>
+                        <select class="form-control mb-1 grupo" name="inp-grupo" disabled>
                             <option value="<?= ($alumno["id_grupo"] != 0) ? $alumno["id_grupo"] : "" ?>"><?= ($alumno["grupo"] != 0) ? $alumno["grupo"] : "Elije un grupo" ?></option>
                             <?php foreach ($grupos as $grupo) { ?>
                                 <option value="<?= $grupo["id_grupo"] ?>"><?= $grupo["nombre_grupo"] ?></option>
                             <?php } ?>
                         </select>
-                        <input type="hidden" name="id-user" id="id-user" value="<?= $alumno["id_alumno"] ?>">
+                        <input type="hidden" name="id-user" value="<?= $alumno["id_alumno"] ?>">
                     </form>
                 </div>
                 <div class="card-body d-flex justify-content-end">
@@ -91,7 +85,6 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
                 </div>
             </div>
         <?php } ?>
-
         <!-- Modal -->
         <div class="modal fade" id="modal-crear-alumno" tabindex="-1" aria-labelledby="modal-label-crear-alumno" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -123,10 +116,10 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
                             </select>
                             <br>
                             <label class="form-label" for="na-contrasena">Contraseña:</label>
-                            <input type="text" class="form-control" name="input-na-contrasena" id="na-contrasena">
+                            <input type="password" class="form-control" name="input-na-contrasena" id="na-contrasena">
                             <br>
                             <label class="form-label" for="na-contrasena2">Confirmar contraseña:</label>
-                            <input type="text" class="form-control" name="input-na-contrasena2" id="na-contrasena2">
+                            <input type="password" class="form-control" name="input-na-contrasena2" id="na-contrasena2">
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -144,6 +137,35 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     $(document).ready(function() {
+        const datosCrear = localStorage.getItem("alumnoCreado");
+        const datosEliminar = localStorage.getItem("alumnoEliminado");
+
+        if(datosCrear){
+            const respuesta = JSON.parse(datosCrear);
+
+            if(respuesta.usuarioCreado){
+                Swal.fire({
+                    icon: "success",
+                    title: respuesta.msg,
+                });
+
+                localStorage.removeItem("alumnoCreado");
+            }
+        }
+
+        if(datosEliminar){
+            const respuesta = JSON.parse(datosEliminar);
+
+            if(respuesta.usuarioEliminado){
+                Swal.fire({
+                    icon: "success",
+                    title: respuesta.msg,
+                });
+
+                localStorage.removeItem("alumnoEliminado");
+            }
+        }
+
         $(".btn-buscar").on("click", function() {
             $valor = $("#nombre-alumno").val();
 
@@ -159,7 +181,7 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
                         html += `<div class="card m-3 p-2" style="width: 18rem;">
                                     <img src="<?= $protocolo . $dominio ?>/img/person.svg" class="card-img-top" alt="alumno">
                                     <div class="card-body">
-                                        <form id="alumno-form">
+                                        <form class="alumno-form">
                                             <label for="nombre">Nombre:</label>
                                             <input class="form-control mb-1 nombre" id="nombre" name="inp-nombre" value="${alumno.nombre}" disabled>
                                             <label for="apellidos">Apellidos:</label>
@@ -175,7 +197,7 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
                                                     <option value="<?= $grupo["id_grupo"] ?>"><?= $grupo["nombre_grupo"] ?></option>
                                                 <?php } ?>
                                             </select>
-                                            <input type="hidden" name="id-user" id="id-user" value="${alumno.id_alumno}">
+                                            <input type="hidden" name="id-user" value="${alumno.id_alumno}">
                                         </form>
                                     </div>
                                     <div class="card-body d-flex justify-content-end">
@@ -208,6 +230,34 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
             $(this).closest(".card").find(".btn-editar").removeClass("d-none");
             $(this).closest(".card").find(".btn-guardar").addClass("d-none");
         })
+
+        $(document).on("click", ".btn-borrar", function() {
+            const respuesta = confirm("¿Seguro que quieres eliminar este alumno?");
+
+            if(respuesta){
+                $.ajax({
+                    url: url + "/func/eliminar_alumno.php",
+                    type: "POST",
+                    data: $(this).closest(".card").find(".alumno-form").serialize(),
+                    success: function(res) {
+                        if (res.id == "200") {
+                            const datos = {
+                                eliminado: true,
+                                msg: res.message
+                            }
+                            localStorage.setItem("eliminarAlumno", JSON.stringify(datos));
+                            location.reload();
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: res.message,
+                            });
+                        }
+                    }
+                })
+            }
+        })
+
 
         $(document).on("click", ".btn-guardar", function() {
             let $nombre = $(this).closest(".card").find(".nombre").val();
@@ -246,7 +296,7 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
             $.ajax({
                 url: url + "/func/cambiar_datos_alumno_profesor.php",
                 type: "POST",
-                data: $(this).closest(".card").find("#alumno-form").serialize(),
+                data: $(this).closest(".card").find(".alumno-form").serialize(),
                 success: function(res) {
                     if (res.id == "200") {
                         Swal.fire({
@@ -259,6 +309,108 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
                         $btn_editar.removeClass("d-none");
                         $inputs.attr("disabled", true);
                     } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: res.message,
+                        });
+                    }
+                }
+            })
+        })
+
+        $("#btn-confirmar-alumno").on("click", function(){
+            let $nombre = $("#na-nombre").val();
+            let $apellidos = $("#na-apellidos").val();
+            let $email = $("#na-email").val();
+            let $telefono = $("#na-telefono").val();
+            let $grupo = $("#na-grupo").val();
+            let $contrasena = $("#na-contrasena").val();
+            let $contrasena2 = $("#na-contrasena2").val();
+            
+            if($nombre.length <= 0){
+                Swal.fire({
+                    icon: "error",
+                    title: "Por favor, rellene el campo nombre",
+                });
+                return;
+            }
+            if($apellidos.length <= 0){
+                Swal.fire({
+                    icon: "error",
+                    title: "Por favor, rellene el campo apellidos",
+                });
+                return;
+            }
+            if($email.length <= 0){
+                Swal.fire({
+                    icon: "error",
+                    title: "Por favor, rellene el campo email",
+                });
+                return;
+            }
+            if(!regexEmail.test($email)){
+                Swal.fire({
+                    icon: "error",
+                    title: "Email no válido",
+                });
+                return;
+            }
+            if($telefono.length <= 0){
+                Swal.fire({
+                    icon: "error",
+                    title: "Por favor, rellene el campo teléfono",
+                });
+                return;
+            }
+            if($telefono.length < 9){
+                Swal.fire({
+                    icon: "error",
+                    title: "Por favor, el teléfono debe tener al menos 9 dígitos",
+                });
+                return;
+            }
+            if($grupo.length <= 0){
+                Swal.fire({
+                    icon: "error",
+                    title: "Por favor, rellene el campo grupo",
+                });
+                return;
+            }
+            if($contrasena.length <= 0){
+                Swal.fire({
+                    icon: "error",
+                    title: "Por favor, rellene el campo contraseña",
+                });
+                return;
+            }
+            if($contrasena2.length <= 0){
+                Swal.fire({
+                    icon: "error",
+                    title: "Por favor, rellene el campo confirmar contraseña",
+                });
+                return;
+            }
+            if($contrasena !== $contrasena2){
+                Swal.fire({
+                    icon: "error",
+                    title: "Las contraseñas no coinciden",
+                });
+                return;
+            }
+
+            $.ajax({
+                url: url + "/func/crear_alumno.php",
+                method: "POST",
+                data: $("#form-nuevo-alumno").serialize(),
+                success: function(res){
+                    if (res.id == "200") {
+                        const datos = {
+                            usuarioCreado: true,
+                            msg: res.message
+                        }
+                        localStorage.setItem("alumnoCreado", JSON.stringify(datos));
+                        location.reload();
+                    } else{
                         Swal.fire({
                             icon: "error",
                             title: res.message,

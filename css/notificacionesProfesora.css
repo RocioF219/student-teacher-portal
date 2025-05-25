@@ -1,13 +1,14 @@
 body{
     background-color: black;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
-.containerPadre{
+
+.container-padre{
     position: relative;
     background-color: rgb(255, 255, 255);
-    height: 150px;
-    width: 100%;
     border-radius: 5px;
-    /*border: 6px solid red;*/
     display: flex;
     justify-content: center;
     align-items: center;
@@ -48,3 +49,43 @@ body{
       font-size: 0.9rem;
     }
   }
+
+.container-mensajes{
+    width: 100%;
+    height: 400px;
+}
+
+.menu-lateral{
+    background-color: white;
+    height: 100%;
+    border-right: 1px solid black;
+}
+
+.menu-mensajes{
+    background-color: white;
+    width: auto;
+    height: 100%;
+}
+
+.boton-menu{
+    height: 40px;
+    cursor: pointer;
+}
+
+.boton-menu:hover{
+    background-color: #CC374D;
+}
+
+.mensaje{
+    height: 40px;
+    cursor: pointer;
+    border-bottom: 1px solid black;
+}
+
+.mensaje:hover{
+    background-color: #dfdfdf;
+}
+
+.no-gutter{
+    --bs-gutter-x: 0;
+}

@@ -3,6 +3,8 @@ $directorio = $_SERVER["DOCUMENT_ROOT"];
 include("$directorio/func/verErrores.php");
 include_once("$directorio/func/fichaAlumnoback.php");
 include_once("$directorio/func/logged.php");
+include_once("$directorio/func/logged_alumno.php");
+
 
 $clases = include_once("$directorio/func/obtener_clases.php");
 $profesores = include_once("$directorio/func/obtener_profesores.php");
@@ -13,31 +15,16 @@ $profesores = include_once("$directorio/func/obtener_profesores.php");
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- FullCalendar CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css" rel="stylesheet" />
-    <!-- FullCalendar JS -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js"></script>
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
-        crossorigin="anonymous" />
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
-        crossorigin="anonymous"></script>
+    <?php include_once("$directorio/includes/header.php"); ?>
     <link rel="stylesheet" href="../css/fichaAlumno.css" />
-    <title>Escuela de Danza Alicia Iranzo</title>
 </head>
 
 <body>
     <header>
-        <div class="containerPadre">
+        <div class="container-padre">
             <img class="logo" src="../img/logo/logo_alicia.jpg" />
             <a href="/">
-                <div class="containerHijo">
+                <div class="container-hijo">
                     <img
                         class="button"
                         src="../img/logo/log-out.svg"
