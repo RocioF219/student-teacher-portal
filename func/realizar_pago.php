@@ -12,23 +12,25 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
     global $link;
 
     $mensajes = [
-        "code" => "500",
-        "message" => "Error"
+        "id" => "500",
+        "message" => "Error al realizar el pago"
     ];
 
     $id = $_SESSION["alumno_id"];
-    $id_profesor = base64_decode($_POST["inp-profesor"]);
-    $mensaje = $_POST["inp-mensaje"];
+    $concepto = $_POST["inp-concepto"];
+    $importe = $_POST["inp-importe"];
+    $fecha = $_POST["inp-fecha"];
+    $metodo = $_POST["inp-metodo"];
 
-    $query = "INSERT INTO mensajes(emisor_id, receptor_id, mensaje) VALUES (?, ?, ?)";
+    $query = "INSERT INTO pago(id_alumno, concepto, metodo, fecha, precio) VALUES (?, ?, ?, ?, ?)";
     $stmt = $link->prepare($query);
-    $stmt->bind_param("iis", $id, $id_profesor, $mensaje);
+    $stmt->bind_param("issss", $id, $concepto, $metodo, $fecha, $importe);
     $stmt->execute();
 
     if($stmt->affected_rows > 0){
         $mensajes = [
-            "code" => "200",
-            "message" => "Mensaje enviado correctamente"
+            "id" => "200",
+            "message" => "Pago realizado correctamente"
         ];
     }
     

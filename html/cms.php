@@ -4,9 +4,21 @@ session_start();
 
 include("$directorio/func/verErrores.php");
 include("$directorio/func/dominio.php");
+include("$directorio/includes/database.php");
 include("$directorio/func/logged.php");
 include("$directorio/func/logged_profesor.php");
 
+global $link;
+
+$id = $_SESSION["alumno_id"];
+
+$query = "SELECT count(*) as numero FROM `mensajes` WHERE receptor_id = $id AND leido = 0";
+$stmt = $link->prepare($query);
+$stmt->execute();
+$result = $stmt->get_result();
+$mensaje = $result->fetch_assoc();
+
+$num_mensajes = $mensaje["numero"];
 
 ?>
 <!DOCTYPE html>
@@ -41,15 +53,15 @@ include("$directorio/func/logged_profesor.php");
         <div class="card" style="width: 18rem; height: 30rem;">
             <div class="d-flex flex-column justify-content-between h-100">
                 <div class="d-flex flex-column justify-content-center">
-                    <img src="<?= $protocolo . $dominio ?>/img/campana.png" class="card-img-top" alt="...">
+                    <img src="<?= $protocolo . $dominio ?>/img/campana.png" class="card-img-top" alt="Alerta icono">
                 </div>
                 <div class="card-body d-flex flex-column text-center">
                     <div>
-                        <h4 class="card-title">Alertas</h4>
+                        <h4 class="card-title">Alertas <?php if($num_mensajes > 0){ ?>(<?= ($num_mensajes < 100) ? $num_mensajes : "+99" ?>)<?php } ?></h4>
                         <p class="card-text">Contactar con alumnos, padres y ver mensajes recibidos.</p>
                     </div>
                     <div class="mt-auto">
-                        <a href="<?= $protocolo . $dominio ?>/mensajes" class="btn btn-primary">Entrar</a>
+                        <a href="<?= $protocolo . $dominio ?>/pmensajes" class="btn btn-primary">Entrar</a>
                     </div>
                 </div>
             </div>
@@ -65,7 +77,7 @@ include("$directorio/func/logged_profesor.php");
                         <p class="card-text">Consultar los pagos.</p>
                     </div>
                     <div class="mt-auto ">
-                        <a href="#" class="btn btn-primary">Entrar</a>
+                        <a href="<?= $protocolo . $dominio ?>/pagos" class="btn btn-primary">Entrar</a>
                     </div>
                 </div>
             </div>

@@ -2,12 +2,25 @@
 $directorio = $_SERVER["DOCUMENT_ROOT"];
 include("$directorio/func/verErrores.php");
 include_once("$directorio/func/fichaAlumnoback.php");
+include("$directorio/func/dominio.php");
 include_once("$directorio/func/logged.php");
 include_once("$directorio/func/logged_alumno.php");
 
 
 $clases = include_once("$directorio/func/obtener_clases.php");
 $profesores = include_once("$directorio/func/obtener_profesores.php");
+
+global $link;
+
+$id = $_SESSION["alumno_id"];
+
+$query = "SELECT count(*) as numero FROM `mensajes` WHERE receptor_id = $id AND leido = 0";
+$stmt = $link->prepare($query);
+$stmt->execute();
+$result = $stmt->get_result();
+$mensaje = $result->fetch_assoc();
+
+$num_mensajes = $mensaje["numero"];
 
 ?>
 
@@ -91,7 +104,7 @@ $profesores = include_once("$directorio/func/obtener_profesores.php");
                         </div>
                     </div>
                 </div>
-                <div class="text-black m-3 div-mensajes">
+                <!-- <div class="text-black m-3 div-mensajes">
                     <div class="d-flex flex-column">
                         <div class="d-flex flex-row menu-mensajes">
                             <button class="btn" id="btn-mensajes">
@@ -122,7 +135,7 @@ $profesores = include_once("$directorio/func/obtener_profesores.php");
                                 <div class="w-100 p-3">
                                     <form id="form-mensaje">
                                         <label class="form-label" for="profesor">Profesor:</label>
-                                        <select class="form-control" name="inp-profesor" id="profesor">
+                                        <select class="form-control" name="inp-usuario" id="profesor">
                                             <option value="">Elije un profesor</option>
                                             <?php foreach($profesores as $profesor){ ?>
                                                 <option value="<?= $profesor["id_alumno"] ?>"><?= $profesor["nombre"] . " " . $profesor["apellidos"] ?></option>
@@ -138,36 +151,52 @@ $profesores = include_once("$directorio/func/obtener_profesores.php");
                             </section>
                         </div>
                     </div>
+                </div> -->
+                <div class="card" style="width: 18rem; height: 30rem;">
+                    <div class="d-flex flex-column justify-content-between h-100 mt-5">
+                        <div class="d-flex flex-column justify-content-center align-items-center">
+                            <img src="<?= $protocolo . $dominio ?>/img/mensaje.png" class="card-img-top w-50" alt="Alerta icono">
+                        </div>
+                        <div class="card-body d-flex flex-column text-center mt-5">
+                            <div>
+                                <h4 class="card-title">Alertas <?php if($num_mensajes > 0){ ?>(<?= ($num_mensajes < 100) ? $num_mensajes : "+99" ?>)<?php } ?></h4>
+                                <p class="card-text">Contactar con profesores y ver mensajes recibidos.</p>
+                            </div>
+                            <div class="mt-auto">
+                                <a href="<?= $protocolo . $dominio ?>/amensajes" class="btn btn-primary">Entrar</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div>
-                    <div class="card">
+                    <div class="card" style="width: 18rem; height: 30rem;">
                         <div class="card-header bg-primary text-white">
                             Registrar Pago
                         </div>
                         <div class="card-body">
-                            <form id="formPago">
+                            <form id="formPago" method="POST">
                                 <div class="mb-3">
                                     <label for="concepto" class="form-label">Concepto</label>
-                                    <input type="text" class="form-control" id="concepto" placeholder="Mensualidad abril, matrícula...">
+                                    <input type="text" class="form-control" id="concepto" name="inp-concepto" placeholder="Mensualidad abril, matrícula...">
                                 </div>
                                 <div class="mb-3">
                                     <label for="importe" class="form-label">Importe (€)</label>
-                                    <input type="number" class="form-control" id="importe" placeholder="Ej: 50">
+                                    <input type="number" class="form-control" id="importe" name="inp-importe" placeholder="Ej: 50">
                                 </div>
                                 <div class="mb-3">
                                     <label for="fecha" class="form-label">Fecha</label>
-                                    <input type="date" class="form-control" id="fecha">
+                                    <input type="date" class="form-control" id="fecha" name="inp-fecha">
                                 </div>
                                 <div class="mb-3">
                                     <label for="metodo" class="form-label">Método de pago</label>
-                                    <select class="form-select" id="metodo">
-                                        <option>Selecciona</option>
-                                        <option>Efectivo</option>
-                                        <option>Transferencia</option>
-                                        <option>Bizum</option>
+                                    <select class="form-select" id="metodo"  name="inp-metodo">
+                                        <option value="">Selecciona</option>
+                                        <option value="Efectivo">Efectivo</option>
+                                        <option value="Transferencia">Transferencia</option>
+                                        <option value="Bizum">Bizum</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-success">Enviar</button>
+                                <button type="button" class="btn btn-success" id="btn-pagar">Enviar</button>
                             </form>
                         </div>
                     </div>
@@ -192,14 +221,13 @@ $profesores = include_once("$directorio/func/obtener_profesores.php");
                 $("#guardar-btn").on("click", function() {
                     let $email = $("#campo-email").val();
                     let $tlf = $("#campo-telefono").val();
-                    console.log($tlf.length)
-
 
                     if ($email.length == 0) {
                         Swal.fire({
                             icon: "error",
                             title: "Debes rellenar el campo email",
                         });
+                        return;
                     }
 
                     if ($tlf.length == 0) {
@@ -207,6 +235,7 @@ $profesores = include_once("$directorio/func/obtener_profesores.php");
                             icon: "error",
                             title: "Debes rellenar el campo teléfono",
                         });
+                        return;
                     }
 
                     if ($tlf.length > 9) {
@@ -214,6 +243,7 @@ $profesores = include_once("$directorio/func/obtener_profesores.php");
                             icon: "error",
                             title: "El campo telefono no puede superar los 9 dígitos",
                         });
+                        return;
                     }
 
                     $.ajax({
@@ -312,7 +342,74 @@ $profesores = include_once("$directorio/func/obtener_profesores.php");
                     })
                 })
 
+                $("#btn-pagar").on("click", function() {
+                    let $concepto = $("#concepto").val();
+                    let $importe = $("#importe").val();
+                    let $fecha = $("#fecha").val();
+                    let $metodo = $("#metodo").val();
 
+
+                    if ($concepto.length == 0) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Debes rellenar el campo concepto",
+                        });
+                        return;
+                    }
+
+                    if ($importe < 0) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Debes rellenar el campo importe",
+                        });
+                        return;
+                    }
+
+                    if ($importe == 0) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "El importe debe de ser mayor a 0€",
+                        });
+                        return;
+                    }
+
+                    if ($fecha.length == 0) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Debes rellenar el campo fecha",
+                        });
+                        return;
+                    }
+
+                    if ($metodo.length == 0) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Debes rellenar el campo método",
+                        });
+                        return;
+                    }
+
+                    $.ajax({
+                        url: url + "/func/realizar_pago.php",
+                        method: "POST",
+                        data: $("#formPago").serialize(),
+                        success: function(respuesta) {
+                            if (respuesta.id == "200") {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: respuesta.message,
+                                });
+                                $("#formPago")[0].reset();
+                            } else {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: respuesta.message,
+                                });
+                            }
+                        }
+                    })
+
+                });
             })
         </script>
 </body>
