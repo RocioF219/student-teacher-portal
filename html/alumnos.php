@@ -37,7 +37,7 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
 
                 <!-- Logout a la derecha -->
                 <div class="col-4 col-md-2 text-end">
-                    <a href="../index.html">
+                    <a href="/">
                         <img src="../img/logo/log-out.svg" alt="Logout" style="width: 30px; height: 30px;">
                     </a>
                 </div>
@@ -74,10 +74,11 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
                                 <option value="<?= $grupo["id_grupo"] ?>"><?= $grupo["nombre_grupo"] ?></option>
                             <?php } ?>
                         </select>
-                        <input type="hidden" name="id-user" value="<?= $alumno["id_alumno"] ?>">
+                        <input type="hidden" class="id-user" name="id-user" value="<?= $alumno["id_alumno"] ?>">
                     </form>
                 </div>
                 <div class="card-body d-flex justify-content-end">
+                    <button class="btn btn-warning btn-sm me-2 btn-contra" data-bs-toggle="modal" data-bs-target="#modal-cambiar-contrasena">Cambiar contraseña</button>
                     <button class="btn btn-dark btn-sm me-2 btn-editar">Editar</button>
                     <button class="btn btn-success btn-sm me-2 btn-guardar d-none">Guardar</button>
                     <button class="btn btn-danger btn-sm me-2 btn-cancelar d-none">Cancelar</button>
@@ -85,7 +86,31 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
                 </div>
             </div>
         <?php } ?>
-        <!-- Modal -->
+        <!-- Modal cambiar contraseña -->
+        <div class="modal fade" id="modal-cambiar-contrasena" tabindex="-1" aria-labelledby="modal-label-cambiar-contrasena" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-label-cambiar-contrasena">Cambiar la contraseña</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-cambiar-contrasena">
+                            <label class="form-label" for="cc-contrasena">Contraseña:</label>
+                            <input type="password" class="form-control" name="input-cc-contrasena" id="cc-contrasena">
+                            <br>
+                            <label class="form-label" for="cc-contrasena2">Confirmar contraseña:</label>
+                            <input type="password" class="form-control" name="input-cc-contrasena2" id="cc-contrasena2">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-success" id="btn-confirmar-contrasena">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal crear alumno -->
         <div class="modal fade" id="modal-crear-alumno" tabindex="-1" aria-labelledby="modal-label-crear-alumno" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -214,7 +239,6 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
         })
 
         $(document).on("click", ".btn-editar", function() {
-            let $id = $(this).closest(".card").find("#id-user").val();
             $(this).closest(".card").find(".nombre, .apellidos, .email, .telefono, .grupo").attr("disabled", false)
             $(this).addClass("d-none");
             $(this).closest(".card").find(".btn-borrar").addClass("d-none");
@@ -223,7 +247,6 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
         })
 
         $(document).on("click", ".btn-cancelar", function() {
-            let $id = $(this).closest(".card").find("#id-user").val();
             $(this).closest(".card").find(".nombre, .apellidos, .email, .telefono, .grupo").attr("disabled", true)
             $(this).addClass("d-none");
             $(this).closest(".card").find(".btn-borrar").removeClass("d-none");
@@ -410,6 +433,61 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
                         }
                         localStorage.setItem("alumnoCreado", JSON.stringify(datos));
                         location.reload();
+                    } else{
+                        Swal.fire({
+                            icon: "error",
+                            title: res.message,
+                        });
+                    }
+                }
+            })
+        })
+
+        $(document).on("click", ".btn-contra", function(){
+            const idAlumno = $(this).closest(".card").find(".id-user").val();
+            $("#btn-confirmar-contrasena").data("id-user", idAlumno);
+        })
+
+        $("#btn-confirmar-contrasena").on("click", function(){
+            let $contrasena = $("#cc-contrasena").val();
+            let $contrasena2 = $("#cc-contrasena2").val();
+            let $id = $(this).data("id-user");
+
+            if($contrasena.length <= 0){
+                Swal.fire({
+                    icon: "error",
+                    title: "Por favor, rellene el campo contraseña",
+                });
+                return;
+            }
+            if($contrasena2.length <= 0){
+                Swal.fire({
+                    icon: "error",
+                    title: "Por favor, rellene el campo confirmar contraseña",
+                });
+                return;
+            }
+            if($contrasena !== $contrasena2){
+                Swal.fire({
+                    icon: "error",
+                    title: "Las contraseñas no coinciden",
+                });
+                return;
+            }
+
+            $.ajax({
+                url: url + "/func/cambiar_contrasena_alumno.php",
+                method: "POST",
+                data: $("#form-cambiar-contrasena").serialize() + "&id=" + $id,
+                success: function(res){
+                    if (res.id == "200") {
+                        Swal.fire({
+                            icon: "success",
+                            title: res.message,
+                        });
+
+                        $("#modal-cambiar-contrasena").modal("hide");
+                        $("#form-cambiar-contrasena")[0].reset();
                     } else{
                         Swal.fire({
                             icon: "error",
