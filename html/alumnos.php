@@ -216,39 +216,45 @@ $grupos = include_once("$directorio/func/obtener_grupos.php");
                 },
                 success: function(res) {
                     let html = "";
-                    res.forEach((alumno, x) => {
-                        html += `<div class="card m-3 p-2" style="width: 18rem;">
-                                    <img src="<?= $protocolo . $dominio ?>/img/person.svg" class="card-img-top" alt="alumno">
-                                    <div class="card-body">
-                                        <form class="alumno-form">
-                                            <label for="nombre">Nombre:</label>
-                                            <input class="form-control mb-1 nombre" id="nombre" name="inp-nombre" value="${alumno.nombre}" disabled>
-                                            <label for="apellidos">Apellidos:</label>
-                                            <input class="form-control mb-1 apellidos" id="apellidos" name="inp-apellidos" value="${alumno.apellidos}" disabled>
-                                            <label for="email">Email:</label>
-                                            <input class="form-control mb-1 email" id="email" name="inp-email" value="${alumno.email}" disabled>
-                                            <label for="telefono">Telefono:</label>
-                                            <input class="form-control mb-1 telefono" id="telefono" name="inp-telefono" value="${alumno.telefono}" disabled>
-                                            <label for="grupo">Grupo:</label>
-                                            <select class="form-control mb-1 grupo" id="grupo" name="inp-grupo" disabled>
-                                                <option value="${(alumno.id_grupo != 0) ? alumno.id_grupo : ""}">${(alumno.grupo != 0) ? alumno.grupo : "Elije un grupo"}</option>
-                                                <?php foreach ($grupos as $grupo) { ?>
-                                                    <option value="<?= $grupo["id_grupo"] ?>"><?= $grupo["nombre_grupo"] ?></option>
-                                                <?php } ?>
-                                            </select>
-                                            <input type="hidden" name="id-user" value="${alumno.id_alumno}">
-                                        </form>
-                                    </div>
-                                    <div class="card-body d-flex justify-content-end">
-                                        <button class="btn btn-dark btn-sm me-2 btn-editar">Editar</button>
-                                        <button class="btn btn-success btn-sm me-2 btn-guardar d-none">Guardar</button>
-                                        <button class="btn btn-danger btn-sm me-2 btn-cancelar d-none">Cancelar</button>
-                                        <button class="btn btn-danger btn-sm me-2 btn-borrar">Borrar</button>
-                                    </div>
-                                </div>`
-                                //Insertamos todas la tarjetas creadas en el contenedor
-                        $("#container-cards").html(html);
-                    });
+                    $("#container-cards").html("");
+                    if(res.length > 0){
+                        res.forEach((alumno) => {
+                            html += `<div class="card m-3 p-2" style="width: 18rem;">
+                                        <img src="<?= $protocolo . $dominio ?>/img/person.svg" class="card-img-top" alt="alumno">
+                                        <div class="card-body">
+                                            <form class="alumno-form">
+                                                <label for="nombre">Nombre:</label>
+                                                <input class="form-control mb-1 nombre" id="nombre" name="inp-nombre" value="${alumno.nombre}" disabled>
+                                                <label for="apellidos">Apellidos:</label>
+                                                <input class="form-control mb-1 apellidos" id="apellidos" name="inp-apellidos" value="${alumno.apellidos}" disabled>
+                                                <label for="email">Email:</label>
+                                                <input class="form-control mb-1 email" id="email" name="inp-email" value="${alumno.email}" disabled>
+                                                <label for="telefono">Telefono:</label>
+                                                <input class="form-control mb-1 telefono" id="telefono" name="inp-telefono" value="${alumno.telefono}" disabled>
+                                                <label for="grupo">Grupo:</label>
+                                                <select class="form-control mb-1 grupo" id="grupo" name="inp-grupo" disabled>
+                                                    <option value="${(alumno.id_grupo != 0) ? alumno.id_grupo : ""}">${(alumno.grupo != 0) ? alumno.grupo : "Elije un grupo"}</option>
+                                                    <?php foreach ($grupos as $grupo) { ?>
+                                                        <option value="<?= $grupo["id_grupo"] ?>"><?= $grupo["nombre_grupo"] ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                                <input type="hidden" name="id-user" value="${alumno.id_alumno}">
+                                            </form>
+                                        </div>
+                                        <div class="card-body d-flex justify-content-end">
+                                            <button class="btn btn-warning btn-sm me-2 btn-contra" data-bs-toggle="modal" data-bs-target="#modal-cambiar-contrasena">Cambiar contraseña</button>
+                                            <button class="btn btn-dark btn-sm me-2 btn-editar">Editar</button>
+                                            <button class="btn btn-success btn-sm me-2 btn-guardar d-none">Guardar</button>
+                                            <button class="btn btn-danger btn-sm me-2 btn-cancelar d-none">Cancelar</button>
+                                            <button class="btn btn-danger btn-sm me-2 btn-borrar">Borrar</button>
+                                        </div>
+                                    </div>`
+                        });
+                    } else{
+                        html += '<div class="alert alert-warning">No se encontró ningún alumno</div>'
+                    }
+                    //Insertamos todas la tarjetas creadas en el contenedor
+                    $("#container-cards").html(html);
                 }
             })
         })
