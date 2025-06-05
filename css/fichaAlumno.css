@@ -12,6 +12,7 @@ body{
     justify-content: center;
     align-items: center;
 }
+/*Botón situado a la derecha del container padre y centrado verticalmente*/
 .button{
     position: absolute;
     top: 50%;
@@ -19,19 +20,24 @@ body{
     transform: translateY(-50%);
     margin-right: 10px;
 }
+/*Logo centrado en el container padre, con tamaños especifico*/
 .logo{
     height: 150px;
     width: auto;
     border-radius: 4px;
 }
+/*Separación de la tarjeta en relación del borde superior e izquierdo*/
 .contenedorTarjeta{
     margin-top: 30px;
     margin-left: 30px;
 }
+/*Contenedor del calendario con un ancho fijo y compotamiento en línea*/
 .contenedorCalendario{
     width: 400px;
     display: inline;
 }
+/*Estilo del calendario completo, centrado, con bordes que son visibles y estilo monoespaciado*/
+/*Estilo del titulo, celdas y dias del calendario */
 #calendar {
     width: 100%;
     max-width: 500px;
@@ -86,6 +92,7 @@ body{
     color: white;
     font-weight: bold;
   }
+  /*Estilo para las tarjetas, indicando margen */
   .card {
     margin-top: 20px;
     margin-right: 20px;
@@ -99,7 +106,7 @@ body{
     background-color: white;
     border-radius: 5px;
 }
-
+/*Estilo para el encabezado del contenedor de mensajes*/
 .menu-mensajes{
     background-color: #0C6EFD;
     border-top-left-radius: 5px;

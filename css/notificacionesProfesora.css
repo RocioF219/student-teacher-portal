@@ -1,10 +1,12 @@
+/*Fondo de la página de color negro, sin margenes, sin padding y sin scroll*/
+
 body{
     background-color: black;
     margin: 0;
     padding: 0;
     overflow: hidden;
 }
-
+/*Contenedor padre igual que en los otros estilos*/
 .container-padre{
     position: relative;
     background-color: rgb(255, 255, 255);
@@ -13,6 +15,7 @@ body{
     justify-content: center;
     align-items: center;
 }
+/*Contenedor de las tarjetas, con espacios entre ellas y adaptandose al ancho*/
 .card-container{
     display: flex;
     gap: 50px;
@@ -44,12 +47,13 @@ body{
     transform: scale(1.05);
     box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
 }
+/*Estilo responsive para que funcione en las pantallas pequeás, esto reduce el tamaño del texto en navbar*/
 @media (max-width: 576px) {
     .navbar-text {
       font-size: 0.9rem;
     }
   }
-
+/*Contenedor general de los mensjaes con una altura fija*/
 .container-mensajes{
     width: 100%;
     height: 800px;
@@ -61,14 +65,15 @@ body{
     border-right: 1px solid black;
     border-top-left-radius: 20px;
 }
-
+/*Menu lateral donde se muestran los mensajes , con el fondo blanco y esquinas redondeadas*/
 .menu-mensajes{
     background-color: white;
     width: auto;
     height: 100%;
     border-bottom-right-radius: 20px;
 }
-
+/*Estilo del boton con altura definida y cursor tipo puntero*/
+/*Estilo hovver que al pasar el raton cambia de color y se redondea*/
 .boton-menu{
     height: 40px;
     cursor: pointer;
@@ -79,7 +84,8 @@ body{
     border-radius: 40px;
     color: white;
 }
-
+/*Mensajes con altura minima, separación inferior y efecto puntero*/
+/*Y estilo hovver que al pasar por encima del mensaje cambia el fondo*/
 .mensaje{
     min-height: 40px;
     cursor: pointer;
@@ -89,11 +95,11 @@ body{
 .mensaje:hover{
     background-color: #dfdfdf;
 }
-
+/*Quita el espacio horizontal por defecto entre las columnas*/
 .no-gutter{
     --bs-gutter-x: 0;
 }
-
+/*Estilo para indicar que un elemento del menú esta seleccionado*/
 .menu-selected{
     background-color: #cc374d56;
     border-radius: 40px;

@@ -8,9 +8,10 @@ session_start();
 
 header("Content-Type: application/json");
 
+// Verifica si la solicitud fue realizada mediante el metodo POST.
 if($_SERVER["REQUEST_METHOD"] === "POST"){
     global $link;
-
+// Recupera los datos que son enviados por el formulario.
     $nombre = $_POST["inp-nombre"];
     $apellidos = $_POST["inp-apellidos"];
     $email = $_POST["inp-email"];
@@ -18,6 +19,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
     $grupo = $_POST["inp-grupo"];
     $id = $_POST["id-user"];
 
+    // Prepara la consulta SQL para actualizar los datos del usuario.
     $query = "UPDATE usuario SET nombre = ?, apellidos = ?, email = ?, telefono = ?, id_grupo = ? WHERE id_alumno = ?";
     $stmt = $link->prepare($query);
     $stmt->bind_param("ssssii", $nombre, $apellidos, $email, $telefono, $grupo, $id);
@@ -28,6 +30,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
     //     exit;
     // }
     
+    // Verifica si la actualización de la filas de hizo correctamente.
     if($stmt->affected_rows > 0){
         echo json_encode(["message" => "Cambios realizados correctamente", "id" => "200"]);
         exit;

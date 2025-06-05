@@ -1,27 +1,33 @@
 <?php
+// Obtiene la ruta raíz del servidor para poder usar rutas absolutas en includes
 $directorio = $_SERVER["DOCUMENT_ROOT"];
 session_start();
 
+// Incluimos archivos necesarios para la funcionalidad de la página.
 include("$directorio/func/verErrores.php");
 include("$directorio/func/dominio.php");
 include("$directorio/includes/database.php");
 include_once("$directorio/func/logged.php");
 
-global $link;
+global $link; // Acceso global al objeto de conexión mysql.
 
+// Se obtiene el ID del alumno logueado desde la sesión
 $id = $_SESSION["alumno_id"];
 
+// Consulta para hacer recuento de mensaje no leídos del alumno.
 $query = "SELECT count(*) as numero FROM `mensajes` WHERE receptor_id = $id AND leido = 0";
 $stmt = $link->prepare($query);
 $stmt->execute();
 $result = $stmt->get_result();
 $mensaje = $result->fetch_assoc();
 
-$num_mensajes = $mensaje["numero"];
+$num_mensajes = $mensaje["numero"]; // Se guarda el n umero total de mensajes no leídos.
 
+// Se obtiene la lista de profesores disponibles para enviar los mensajes.
 $profesores = require_once("$directorio/func/obtener_profesores.php");
 $html_profesores = "";
 
+// Se construye una lista de opciones HTML para el select.
 foreach($profesores as $profesor){
     $html_profesores .= '<option value="' . $profesor['id_alumno'] . '">' . $profesor['nombre'] . " " . $profesor['apellidos'] . '</option>';
 }
@@ -32,6 +38,7 @@ foreach($profesores as $profesor){
 <html lang="es">
 
 <head>
+    <!--INcluimos enlaces de Boostrap y CSS personalizados--> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -45,33 +52,46 @@ foreach($profesores as $profesor){
 <body>
     <div class="container-fluid no-gutter">
         <header>
+            <!-- Incluye el archivo de navegación superior. -->
             <?php include_once("$directorio/includes/navbar.php"); ?>
         </header>
+        <!-- Incluye en la interfaz un componente para volver atras -->
         <?php include_once("$directorio/includes/menu-atras.php"); ?>
 
+    <!-- Contenido principal de mensajes -->
         <div class="container d-flex align-items-center mt-5">
             <div class="d-flex flex-row container-mensajes">
+                <!-- Menu lateral con las opciones-->
                 <div class="d-flex align-items-center flex-column menu-lateral w-25">
                     <div class="d-flex align-items-center justify-content-center boton-menu w-100 p-2" id="crear-mensaje">Crear mensaje</div>
                     <div class="d-flex align-items-center justify-content-center boton-menu w-100 p-2 <?php if($num_mensajes > 0){ ?>fw-bold<?php } ?>" id="nuevos-mensajes">Mensajes (<?= $num_mensajes ?>)</div>
                     <div class="d-flex align-items-center justify-content-center boton-menu w-100 p-2" id="historial">Historial</div>
                 </div>
+                <!-- COntenedor donde se van a cargar los mensjaesmensajes o formularios dinamicamente-->
                 <div class="d-flex overflow-y-auto flex-column menu-mensajes w-75">
 
                 </div>
             </div>
         </div>
     </div>
-
+    <!-- Inclluimos el footer-->
     <?php include_once("$directorio/includes/footer.php") ?>
     <script>
         $(document).ready(function() {
+            // Evento para cuando se hace click en Crear mensaje.
             $("#crear-mensaje").on("click", function() {
+                // Inyección de las opciones del select de profesores desde PHP.
                 let $profesores = '<?= $html_profesores ?>';
+
+                // Quita la clase anterior y la aplica a este boton.
                 $(".menu-selected").removeClass("menu-selected")
                 $(this).addClass("menu-selected")
+
+               // Limpia el contenido del contenedor de mensajes y oculta respuestas previas.
                 $(".menu-mensajes").html("");
                 $(".msj-responder").addClass("invisible");
+
+                 // SI hay profesores disponibles, muestra el formulario con selector.
                 if($profesores != ""){
                     $(".menu-mensajes").append(`
                         <div class="div-respuesta m-4">
@@ -95,6 +115,7 @@ foreach($profesores as $profesor){
                         </div>
                     `);
                 } else{
+                    // Si no hay profesores disponibles, muestra un mensaje alternativo.
                     $(".menu-mensajes").append(`
                         <div class="div-respuesta m-4">
                             <div class="d-flex flex-column m-1">
@@ -113,16 +134,17 @@ foreach($profesores as $profesor){
                             </div>
                         </div>
                     `);                }
-
+                    // Inicializa el plugin select2 para un selector de alumnos.
                 $('.select-alumnos').select2();
             })
 
+            // Enviar un nuevo mensaje mediante AJAX usando los datos del formulario.
             $(document).on("click", ".btn-enviar-nuevo-mensaje", function() {
                 $.ajax({
-                    url: url + "/func/enviar_mensaje.php",
+                    url: url + "/func/enviar_mensaje.php", // Ruta al archivo que gestiona el envio.
                     method: "POST",
                     dataType: 'JSON',
-                    data: $("#nuevo-mensaje").serialize() + "&d=2",
+                    data: $("#nuevo-mensaje").serialize() + "&d=2", // Se serializa el formulario y se agrega parámetro extra.
                     success: function(res) {
                         if (res.code == "200") {
                             Swal.fire({
@@ -144,11 +166,11 @@ foreach($profesores as $profesor){
                     }
                 })
             });
-
+            // Carga nuevo mensajes.
             $("#nuevos-mensajes").on("click", function() {
-                $(".menu-mensajes").html("");
-                $(".menu-selected").removeClass("menu-selected")
-                $(this).addClass("menu-selected")
+                $(".menu-mensajes").html(""); // Limpia el contenedor.
+                $(".menu-selected").removeClass("menu-selected") // Remueve la clase seleccion.
+                $(this).addClass("menu-selected") // Marca como seleccionado.
                 $.ajax({
                     url: url + "/func/nuevos-mensajes.php",
                     method: "POST",
@@ -172,7 +194,7 @@ foreach($profesores as $profesor){
                     }
                 })
             })
-
+            // Carga el historial de mensajes.
             $("#historial").on("click", function() {
                 $(".menu-selected").removeClass("menu-selected")
                 $(this).addClass("menu-selected")
@@ -204,7 +226,7 @@ foreach($profesores as $profesor){
                     }
                 })
             })
-
+            // Al hacer cli sobre un mensaje se obtiene su contenido.
             $(document).on("click", ".mensaje", function() {
                 let id = $(this).attr("id");
                 $.ajax({
@@ -219,6 +241,7 @@ foreach($profesores as $profesor){
                         }
                         let mensajes = res[0];
 
+                        // Determina el nombre a mostrar según quién es el emisor.
                         if(<?= $_SESSION["alumno_id"] ?> == res[0][0].emisor_id){
                             $nombre = res[0][0].nombre_re + " " + res[0][0].apellidos_re;
                         } else{
@@ -226,6 +249,7 @@ foreach($profesores as $profesor){
                         }
 
                         if(res[0][0].emisor_id == <?= $_SESSION["alumno_id"] ?>){
+                            // Si el emisor es el alumno, ocurre el siguiente código.
                             $(".menu-mensajes").append(`
                                 <div class="d-flex flex-column m-2 main" data-hilo="${res[0][0].hilo}">
                                     <div class="d-flex justify-content-between">
@@ -251,6 +275,7 @@ foreach($profesores as $profesor){
                                 </div>
                             `);
                         } else{
+                            // Si el receptor es el alumno, ocurre lo siguiente.
                             $(".menu-mensajes").append(`
                                 <div class="d-flex flex-column m-2 main" data-hilo="${res[0][0].hilo}">
                                     <div class="d-flex justify-content-between">
@@ -276,8 +301,13 @@ foreach($profesores as $profesor){
                                 </div>
                             `);
                         }
+
+                        // Iteración desde el segundo mensaje en adelante.
                         mensajes.slice(1).forEach(function(mensaje){
+
+                            // Si el emisor del mensaje es el usuario actual.
                             if(mensaje.emisor_id == <?= $_SESSION["alumno_id"] ?>){
+                                // Mostramos el mensaje alineado a la derecha.
                                 $(".div-mensajes").append(`
                                     <div class="col-12 d-flex justify-content-end">
                                         <div class="d-flex flex-column m-2 p-2 rounded bg-success text-white main" style="max-width: 70%;">
@@ -287,6 +317,8 @@ foreach($profesores as $profesor){
                                     </div>
                                 `);
                             } else{
+
+                                // Mostramos el mensaje alineado a la izquierda.
                                 $(".div-mensajes").append(`
                                     <div class="col-12 d-flex justify-content-start">
                                         <div class="d-flex flex-column m-2 p-2 rounded bg-light text-dark main" style="max-width: 70%;">
@@ -300,9 +332,12 @@ foreach($profesores as $profesor){
                     }
                 })
             })
-
+            // Evento que ocurre al hacer clic en el boton Responder.
             $(document).on("click", ".msj-responder", function() {
+                // Oculta el boton Responder para evitar multiples formularios.
                 $(".msj-responder").addClass("invisible");
+
+                // Agrega el formulario de respuesta.
                 $(".menu-mensajes").append(`
                     <div class="div-respuesta">
                         <div class="border-bottom mb-1 mt-2"></div>
@@ -319,7 +354,8 @@ foreach($profesores as $profesor){
                         </div>
                     </div>
                 `);
-                
+
+                // Hace scroll hacia abajo para mostrar el formulario de respuesta.
                 const desplazar = setInterval(function(){
                     const menuMensajes = document.querySelector('.menu-mensajes');
 
@@ -332,9 +368,11 @@ foreach($profesores as $profesor){
                 }, 100)
 
             })
-
+            
+            // Botón cancelar de la respuesta.
             $(document).on("click", ".btn-cancelar", function() {
                 $(".msj-responder").removeClass("invisible");
+                // Elimina el formulario de respuesta.
                 $(".div-respuesta").remove();
                 
                 const desplazar = setInterval(function(){
@@ -349,10 +387,15 @@ foreach($profesores as $profesor){
                 }, 100)
             })
 
+            // Evento del boton Enviar del formulario de respuesta.
             $(document).on("click", ".btn-enviar", function() {
+                // Se obtiene el ID del hilo de conversación.
                 const hilo = $(this).closest(".menu-mensajes").find(".main").data("hilo");
+                // Se obtiene el contenido del mensaje de respuesta.
                 const mensaje = $(this).closest(".menu-mensajes").find(".respuesta").val();
 
+                
+                // Envía la respuesta por AJAX.
                 $.ajax({
                     url: url + "/func/responder_mensaje.php",
                     method: "POST",
@@ -362,6 +405,7 @@ foreach($profesores as $profesor){
                      },
                     success: function(res){
                         if(res.code == "200"){
+                            // Muestra mensaje de éxito si todo ha salido correcto.
                             Swal.fire({
                                 title: 'Mensaje enviado',
                                 toast: true,
@@ -372,9 +416,11 @@ foreach($profesores as $profesor){
                                 icon: 'success'
                             });
 
+                            // Restaura el boton Responder y elimina el formulario.
                             $(".msj-responder").removeClass("invisible");
                             $(".div-respuesta").remove();
 
+                            // Agrega el mensaje enviado a la conversación.
                             $(".div-mensajes").append(`
                                 <div class="col-12 d-flex justify-content-end">
                                     <div class="d-flex flex-column m-2 p-2 rounded bg-success text-white main" style="max-width: 70%;">
@@ -392,15 +438,17 @@ foreach($profesores as $profesor){
                     }
                 })
             })
-
+            // Evento al pasar el raton por encima de un mensaje del historial.
             $(document).on("mouseover", ".mensaje", function(){
+                // Muestra el boton para borrar.
                 $(this).closest(".mensaje").find(".btn-borrar").removeClass("d-none")
             })
-
+                // Al quitar el boton del mensaje oculta el boton de borrar.
             $(document).on("mouseleave", ".mensaje", function(){
                 $(this).closest(".mensaje").find(".btn-borrar").addClass("d-none")
             })
 
+            // Evento que al hacer clic en el boton borrar manda una petición AJAX, que borra el mensaje.
             $(document).on("click", ".btn-borrar", function(e){
                 e.stopPropagation();
                 let confirm = window.confirm("¿Seguro que quieres eliminar la conversación?")

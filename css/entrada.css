@@ -1,6 +1,7 @@
 body{
     background-color: rgb(0, 0, 0);
 }
+/*Estilo para el contenedor principal, centrado vertical y horizontalmente */
 .container {
     margin-top: 50px;
     display: flex;
@@ -11,6 +12,7 @@ body{
     height: 100%;
     
 }
+/*Tajeta de entrada centrada, con sombre y bordes redondeados*/
 .card{
     display: flex;
     flex-direction: column;
@@ -23,21 +25,25 @@ body{
     font-family: Calibri;
     font-size: large;
 }
+
+/*Imagen contenida en la tarjeta con los bordes redondeados para la sintonía del estilo*/
 .card-img-top{
     border-radius: 15px;
 }
+/*Botón oscuro, con transición */
 .btn-dark {
     background-color: #000 !important;
     color: white !important;
     border: none;
     transition: all 0.3s ease;
 }
-
+/*Efecto para el boton anterior al pasar el ratón por encima*/
 .btn-dark:hover {
     background-color: crimson !important;
     transform: scale(1.05);
     box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
 }
+/*Animación para simlar un movimiento de flotación suave */
 @keyframes flotar {
     0% {
       transform: translateY(0px);
@@ -50,6 +56,7 @@ body{
     }
   }
 
+  /*Todos los circulos implmentados en el fondo del login, con la posición absoluta y redondeado*/
 .circle {
     position: absolute;
     background-color: crimson;
@@ -57,6 +64,7 @@ body{
     z-index: 0;
     left: calc(100% - 30px);
 }
+/*Todos los circulos implementados en el fondo con un tamaño y posición distinta, y con animación personalizada*/
 .circle1 {
     width: 300px;
     height: 300px;

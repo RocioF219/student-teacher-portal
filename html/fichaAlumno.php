@@ -1,25 +1,33 @@
 <?php
+// Se obtiene la ruta raíz del servidor.
 $directorio = $_SERVER["DOCUMENT_ROOT"];
+
+// Incluimos las funciones necesarias para mostrar errores.
 include("$directorio/func/verErrores.php");
 include_once("$directorio/func/fichaAlumnoback.php");
 include("$directorio/func/dominio.php");
 include_once("$directorio/func/logged.php");
 include_once("$directorio/func/logged_alumno.php");
 
-
+// Se obtiene las clases y profesores disponibles
 $clases = include_once("$directorio/func/obtener_clases.php");
 $profesores = include_once("$directorio/func/obtener_profesores.php");
 
+// Variable global para acceder a la base de datos.
 global $link;
 
+// Se obtiene el ID del alumnno desde la sesión
 $id = $_SESSION["alumno_id"];
 
+
+// Consulta para contar mensajes no leídos del alumno.
 $query = "SELECT count(*) as numero FROM `mensajes` WHERE receptor_id = $id AND leido = 0";
 $stmt = $link->prepare($query);
 $stmt->execute();
 $result = $stmt->get_result();
 $mensaje = $result->fetch_assoc();
 
+// Numero de mensajes no leídos.
 $num_mensajes = $mensaje["numero"];
 
 ?>
@@ -28,6 +36,7 @@ $num_mensajes = $mensaje["numero"];
 <html lang="es">
 
 <head>
+    <!-- Incluimos el encabezado común-->
     <?php include_once("$directorio/includes/header.php"); ?>
     <link rel="stylesheet" href="../css/fichaAlumno.css" />
 </head>
@@ -70,6 +79,7 @@ $num_mensajes = $mensaje["numero"];
                                 <input id="campo-grupo" class="form-control" value="<?php echo $alumno['grupo']; ?>" disabled></input>
                             </li>
                         </ul>
+                        <!--Botones para editar , borrar y cancelar-->
                         <div class="card-body">
                             <button class="btn btn-primary" id="editar-btn">Editar</button>
                             <button class="btn btn-success d-none" id="guardar-btn">Guardar</button>
@@ -78,6 +88,7 @@ $num_mensajes = $mensaje["numero"];
                     </div>
                 </div>
                 <div>
+                    <!-- Tabla base de horario de clases-->
                     <div class="w-100 p-2">
                         <div class="div-clases text-white">
                             <h2>Horario de clases</h2>
@@ -91,7 +102,7 @@ $num_mensajes = $mensaje["numero"];
                                 </thead>
                                 <tbody>
                                     <?php foreach ($clases as $clase) {
-                                        $fecha = (new DateTime($clase["fecha"]))->format("d/m/Y");
+                                        $fecha = (new DateTime($clase["fecha"]))->format("d/m/Y"); // formateo de la fecha
                                     ?>
                                         <tr>
                                             <td><?= $clase["nombre_clase"] ?></td>
@@ -203,9 +214,11 @@ $num_mensajes = $mensaje["numero"];
                 </div>
             </div>
         </div>
+        <!-- Incluimos el footes -->
         <?php include($directorio . "/includes/footer.php") ?>
-
+          <!-- Script específico para manejar los eventos de la ficha del alumno -->                                      
         <script src="/js/fichaAlumno.js"></script>
+        <!-- Script con Jquery para control de interacciones-->
         <script>
             $(document).ready(function() {
                 $("#editar-btn").on("click", function() {
@@ -218,6 +231,7 @@ $num_mensajes = $mensaje["numero"];
                     $("#guardar-btn").removeClass("d-none");
                     $("#cancelar-btn").removeClass("d-none");
                 })
+                //Guardamos cambios de email y telefono.
                 $("#guardar-btn").on("click", function() {
                     let $email = $("#campo-email").val();
                     let $tlf = $("#campo-telefono").val();
@@ -245,7 +259,7 @@ $num_mensajes = $mensaje["numero"];
                         });
                         return;
                     }
-
+                    // Se evian los datos actualizados por AJAX.
                     $.ajax({
                         url: url + "/func/cambiar_datos_alumno.php",
                         method: "POST",
@@ -273,7 +287,7 @@ $num_mensajes = $mensaje["numero"];
                     })
 
                 });
-
+                // Se cancela la edicion 
                 $("#cancelar-btn").on("click", function() {
                     $("#campo-email").prop("disabled", true);
                     $("#campo-telefono").prop("disabled", true);
@@ -282,7 +296,7 @@ $num_mensajes = $mensaje["numero"];
                     $("#guardar-btn").addClass("d-none");
                     $("#cancelar-btn").addClass("d-none");
                 });
-
+                // Se cambia entre secciones de mensajes.
                 $("#btn-mensajes").on("click", function(){
                     $("#seccion1").removeClass("d-none");
                     $("#seccion2").addClass("d-none");
@@ -300,7 +314,7 @@ $num_mensajes = $mensaje["numero"];
                     $("#seccion1").addClass("d-none");
                     $("#seccion2").addClass("d-none");
                 })
-
+                // Se envia el mensaje.
                 $("#enviar").on("click", function(){
                     let $profe = $("#profesor").val();
                     let $mensaje = $("#mensaje").val();
@@ -320,35 +334,37 @@ $num_mensajes = $mensaje["numero"];
                         });
                         return;
                     }
-
+                    // Se envia el mensaje al profesor
                     $.ajax({
-                        url: url + "/func/enviar_mensaje.php",
+                        url: url + "/func/enviar_mensaje.php", // Direccion del script que procesa el mensaje.
                         method: "POST",
-                        data: $("#form-mensaje").serialize(),
-                        success: function(res){
-                            if(res.code == "200"){
+                        data: $("#form-mensaje").serialize(), // Serialización de los datos del formulario con id form-mensaje.
+                        success: function(res){ // Callback en caso de que la petición sea exitosa.
+                            if(res.code == "200"){ // Si la respuesta del servidor indica éxito salta el codigo 200.
                                 Swal.fire({
-                                    icon: "success",
-                                    title: res.message,
+                                    icon: "success", // Alerta de éxito.
+                                    title: res.message, // Se muestra el mensaje recibido por el servidor
                                 });
-                                $("#form-mensaje")[0].reset();
+                                $("#form-mensaje")[0].reset(); // Resetea el formulario despues del envio
                             } else{
                                 Swal.fire({
-                                    icon: "error",
-                                    title: res.message,
+                                    icon: "error", // Muestra una alerta de error
+                                    title: res.message, // Muestra el mensaje de error recibido
                                 });
                             }
                         }
                     })
                 })
-
+                // Registro de pago por parte del alumno
                 $("#btn-pagar").on("click", function() {
+
+                    // Obtención de los valores de los campos del formulario
                     let $concepto = $("#concepto").val();
                     let $importe = $("#importe").val();
                     let $fecha = $("#fecha").val();
                     let $metodo = $("#metodo").val();
 
-
+                    // Validaciones para asegurarme de que los campos no estén vacíos y sean válidos.
                     if ($concepto.length == 0) {
                         Swal.fire({
                             icon: "error",
@@ -388,22 +404,22 @@ $num_mensajes = $mensaje["numero"];
                         });
                         return;
                     }
-
+                    // Si todas la validaciones son correctas, se realiza el envío del formulario.
                     $.ajax({
-                        url: url + "/func/realizar_pago.php",
+                        url: url + "/func/realizar_pago.php", // Dirección del script que registra el pago.
                         method: "POST",
-                        data: $("#formPago").serialize(),
+                        data: $("#formPago").serialize(), // Serialización de los datos del formulario.
                         success: function(respuesta) {
                             if (respuesta.id == "200") {
                                 Swal.fire({
                                     icon: "success",
-                                    title: respuesta.message,
+                                    title: respuesta.message, // Mensaje de confirmación.
                                 });
-                                $("#formPago")[0].reset();
+                                $("#formPago")[0].reset(); // Limpia el formulario tras el registro.
                             } else {
                                 Swal.fire({
                                     icon: "error",
-                                    title: respuesta.message,
+                                    title: respuesta.message, // Mensaje de error desde el servidor.
                                 });
                             }
                         }

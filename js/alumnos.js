@@ -1,3 +1,4 @@
+// Creación del array de objetos con información de los alumnos.
 const alumnos=[
     {
         nombre: "Rocio",
@@ -18,10 +19,12 @@ const alumnos=[
     
     },
 ]
-
+// Contenedor donde se inyectan las tarjetas.
 const contenedor = document.getElementById("container-cards");
 
+// Recorremos el array de alumnos.
 alumnos.forEach(alumno =>{
+  // Creación de un nuevo div para cada tarjeta.
     const card = document.createElement("div");
     card.classList.add("card", "m-3");
     card.style.width = "18rem";
@@ -42,6 +45,7 @@ alumnos.forEach(alumno =>{
     <button class="btn btn-info btn-sm ">Asistencia</button>
   </div>
   `;
+  // Añadimos la tarjeta al contenedor principal en el DOM.
   contenedor.appendChild(card);
 });
   

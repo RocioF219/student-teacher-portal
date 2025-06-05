@@ -1,9 +1,12 @@
 <?php
 
+// Ruta raíz del servidor.
 $directorio = $_SERVER["DOCUMENT_ROOT"];
 // include("$directorio/func/logOut.php");
 
+// Incio de sesión
 session_start();
+// Destruye la sesión actual.
 session_destroy();
 
 ?>
@@ -14,6 +17,7 @@ session_destroy();
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!--Incluimos Boostrap CSS Boostrap JS y CSS personalizado-->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
     rel="stylesheet"
@@ -28,6 +32,7 @@ session_destroy();
 </head>
 
 <body>
+  <!--Ciculos del fondo de la pantalla principal-->
   <div class="circle circle1 z-n1" id="circulo1"></div>
   <div class="circle circle2 z-n1" id="circulo2"></div>
   <div class="circle circle3 z-n1" id="circulo3"></div>
@@ -37,6 +42,7 @@ session_destroy();
   <div class="circle circle7 z-n1" id="circulo7"></div>
   <div class="circle circle8 z-n1" id="circulo8"></div>
   <div class="circle circle9 z-n1" id="circulo9"></div>
+  <!--Contenedor principal-->
   <div class="container">
     <div class="d-flex flex-column p-2 login-box">
       <div class="col mt-4">
@@ -45,10 +51,10 @@ session_destroy();
       <div class="col">
         <h5 class="card-title">Inicio de sesión</h5>
         <p class="card-text">
-          Si eres la profesora, alumnado o administrador puedes iniciar
-          sesion.
+          Si eres la profesora, alumnado puedes iniciar sesion.
         </p>
       </div>
+      <!--Formulario de inicio de sesión-->
       <div class="col mt-2">
         <form method="POST" id="loginForm">
           <div class="mb-3">
@@ -69,12 +75,13 @@ session_destroy();
               name="contrasena" />
           </div>
           <br>
+          <!--Boton tiene la funcion de JS asociada-->
           <button type="button" class="btn btn-dark" id="submitForm">Iniciar sesión</button>
         </form>
       </div>
     </div>
   </div>
-
+<!-- Incluimos el footer común-->
   <?php include($directorio . "/includes/footer.php") ?>
 </body>
 

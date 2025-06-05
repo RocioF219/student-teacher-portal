@@ -1,7 +1,10 @@
 <?php
+// Directorio raíz del servidor.
 $directorio = $_SERVER["DOCUMENT_ROOT"];
+// Inicia la sesión.
 session_start();
 
+// Incluimos los archivos de erorres personalizados, funciones, conexión a la base de datos, si el usuario esta logueado o el profesor.
 include("$directorio/func/verErrores.php");
 include("$directorio/func/dominio.php");
 include("$directorio/includes/database.php");
@@ -12,13 +15,15 @@ global $link;
 
 $id = $_SESSION["alumno_id"];
 
+// Incluye el script que devuelve los pagos realizados por el alumno.
 $pagos = include("$directorio/func/obtener_pagos.php");
 
+// Función para formatear fechas.
 function form_fecha($fecha){
     $fecha_arr = explode("-", $fecha);
     $fecha_mod = $fecha_arr[2] . "/" . $fecha_arr[1] . "/" . $fecha_arr[0];
 
-    return $fecha_mod;
+    return $fecha_mod; // Devuelve la fecha formateada.
 }
 
 ?>
@@ -27,6 +32,7 @@ function form_fecha($fecha){
 <html lang="es">
 
 <head>
+    <!-- Implementación de Boostrap, Boostraps JS, CSS personalizado-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -40,8 +46,10 @@ function form_fecha($fecha){
 <body>
     <div class="container-fluid no-gutter">
         <header>
+            <!-- Incluye el navegador que es la cabecera de la pagina-->
             <?php include_once("$directorio/includes/navbar.php"); ?>
         </header>
+        <!-- Incluye el menu atras-->
         <?php include_once("$directorio/includes/menu-atras.php"); ?>
 
         <div class="container d-flex align-items-center mt-5">
@@ -57,8 +65,10 @@ function form_fecha($fecha){
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- Recorre los pagos y muestra cada uno en una fila-->
                         <?php foreach($pagos as $pago): ?>
                             <tr>
+                                <!-- Muestra nombre completo alumno, concepto del pago, método del pago y fecha-->
                                 <td><?= $pago["nombre"] . " " . $pago["apellidos"] ?></td>
                                 <td><?= $pago["concepto"] ?></td>
                                 <td><?= $pago["metodo"] ?></td>
@@ -71,9 +81,10 @@ function form_fecha($fecha){
             </div>
         </div>
     </div>
-
+        <!-- Incluye el pie de la página-->
     <?php include_once("$directorio/includes/footer.php") ?>
     <script>
+        // Script asegura HTML esté cargado y listo para ejecutar.
         $(document).ready(function() {
 
         })

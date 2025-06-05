@@ -1,6 +1,8 @@
+
 body{
     background-color: black;
 }
+/*Contenedor principal, centrado y centra vertical y horizontalmente el contenedor */
 .container-padre{
     position: relative;
     background-color: rgb(255, 255, 255);
@@ -12,11 +14,13 @@ body{
     justify-content: center;
     align-items: center;
 }
+/*Contenedor interno con borde*/
 .container-hijo{
     width: 200px;
     border: 6px solid color red;
 
 }
+/*Contenedor para las tarjetas, centrado y con espacio entre ellas, con estilo wrap para cuando cambie el tamaño de la pantalla*/
 .card-container{
     display: flex;
     gap: 50px;
@@ -31,37 +35,43 @@ body{
     transform: translateY(-50%);
     margin-right: 10px;
 }
+/* Da un tamaño al logo */
 .logo{
     height: 150px;
     width: auto;
     border-radius: 4px;
 }
+/*Estilo para la lista, con margen superior*/
 .lista{
     margin-top: 25px;
 }
-
+/*Contenedor general para las tarjetas, con un gap mas pequeño que el contenedor anterior*/ 
 .container-cards{
     display: flex;
   flex-wrap: wrap;
   gap: 1rem;
 }
+/*Estilo para las card base con bordes especificos*/
 .card {
     border: 1px solid #ccc;
     border-radius: 8px;
   }
-
+/*Estilo para el boton editar con un fondo negro y texto claro */
 .buttonEdit{
     background-color: black;
     color: antiquewhite;
     align-items: center;
 }
+/* Boton eleiminar, centrado y con los mismos colores que el anterior*/
 .buttonDelete{
     background-color: black;
     color: antiquewhite;
     align-items: center;
     justify-content: center;
 }
+/*Imagen de la tarjeta, que ocupa el 60% de la altura manteniendo proporciones*/
 .card-img-top{
     height: 60%;
+    /*Asegura que la imagen se ajuste sin que se deforme*/
     object-fit:contain;
 }
